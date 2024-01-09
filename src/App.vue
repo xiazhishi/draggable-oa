@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<!--    <gridTest/>-->
+    <demo-drag></demo-drag>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import gridTest from "@/components/gridTest.vue";
+import demoDrag from "@/components/demoDrag.vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    // HelloWorld,
+    // gridTest
+    demoDrag
   }
 }
 </script>
@@ -23,6 +26,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+body {
+  margin: 0;
 }
 </style>
