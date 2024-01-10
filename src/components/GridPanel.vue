@@ -12,7 +12,7 @@
             @syncList="syncList"
             @delete-item="deleteItem(col, j)"
         />
-        <div v-if="!col.list.length" class="empty">
+        <div v-if="!col.list.length" class="empty" @click.stop>
           <span>拖拽元素控件到虚线框内</span>
         </div>
       </draggable>
@@ -107,14 +107,6 @@ export default {
       console.log('formList', formList)
       this.$emit('syncList', formList)
     },
-    activeCell () {
-      this.$store.commit('formDesign/updateActiveKey', this.FDkey)
-      this.$store.commit('formDesign/updateShowType', 'grid')
-      this.$store.commit(
-          'formDesign/updateActiveForm',
-          cloneDeep(this.data)
-      )
-    },
     deleteItem (item, j) {
       item.list.splice(j, 1)
       this.$emit('update', this.data)
@@ -156,7 +148,7 @@ export default {
   min-height: 200px;
   cursor: auto;
   position: relative;
-  padding: 5px 10px 20px 10px;
+  padding: 10px 10px 10px 10px;
   margin-bottom: 10px;
   .empty {
     width: 100%;

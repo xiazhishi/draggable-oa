@@ -1,52 +1,58 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="用户管理" name="portalControl">
-      <el-collapse :value="['1','2', '3']" style="width: 100%;">
-        <el-collapse-item title="布局控件" name="3">
-          <draggable
-              :list="layout.child"
-              :group="{ name: 'form-design', put: false, pull: 'clone' }"
-              @change="log"
-              class="drag"
-              ghostClass="ghost"
-              :move="move"
-              @add="add1"
-          >
-            <div class="left-cell" v-for="(item, i) in layout.child" :key="i">
-              <i :class="item.icon"></i>
-              <span class="right">{{item.title}}</span>
-            </div>
-          </draggable>
-        </el-collapse-item>
-        <el-collapse-item title="元素控件" name="1">
-          <draggable
-              :list="base.child"
-              :group="{ name: 'form-design-inner', pull: 'clone', put: false }"
-              :move="elementMove"
-              class="drag"
-          >
-            <div class="left-cell" v-for="(item, i) in base.child" :key="i">
-              <p class="left">
+      <div class="tabs-content">
+        <el-collapse :value="['1','2', '3']" style="width: 100%;">
+          <el-collapse-item title="布局控件" name="3">
+            <draggable
+                :list="layout.child"
+                :group="{ name: 'form-design', put: false, pull: 'clone' }"
+                @change="log"
+                class="drag"
+                ghostClass="ghost"
+                :move="move"
+                @add="add1"
+            >
+              <div class="left-cell" v-for="(item, i) in layout.child" :key="i" :title="item.title">
                 <i :class="item.icon"></i>
-              </p>
-              <p class="right">{{item.title}}</p>
-            </div>
-          </draggable>
-        </el-collapse-item>
-      </el-collapse>
+                <span class="right">{{item.title}}</span>
+              </div>
+            </draggable>
+          </el-collapse-item>
+          <el-collapse-item title="元素控件" name="1">
+            <draggable
+                :list="base.child"
+                :group="{ name: 'form-design-inner', pull: 'clone', put: false }"
+                :move="elementMove"
+                class="drag"
+            >
+              <div class="left-cell" v-for="(item, i) in base.child" :key="i" :title="item.title">
+                <p class="left">
+                  <i :class="item.icon"></i>
+                </p>
+                <p class="right">{{item.title}}</p>
+              </div>
+            </draggable>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
     </el-tab-pane>
     <el-tab-pane label="布局属性" name="layout">
-      <span v-if="element && element.code === 'grid'">
+      <div v-if="element && element.code === 'grid'">
         <div class="setting-content">
           <div class="title">列配置项（每行占比总和最多为24）</div>
           <div v-for="(item, i) in element.cols" :key="i" class="setting-line">
             <span class="index">第{{ i + 1 }}列</span>
             <el-input-number v-model="item.span" :min="1" :max="24" label="列占比" size="small"></el-input-number>
-            <i class="el-icon-circle-close" style="color: red;" @click="subOption(i)"></i>
-            <i v-if="element.cols.length < 4" class="el-icon-circle-plus" style="color: #17B3A3;" title="增加选项" @click="addOption"></i>
+            <i v-if="element.cols.length < 4" class="el-icon-circle-plus" style="color: #17B3A3;" title="插入一列" @click="addOption(i)"></i>
+            <i class="el-icon-circle-close" style="color: red;" @click="subOption(i)" title="删除一列"></i>
           </div>
         </div>
-      </span>
+        <div class="click-content">
+          <div class="title sec-title">一键设置布局比例</div>
+          <thumbnail :cols="element.cols" @rectangle-click="rectangleClick"></thumbnail>
+        </div>
+      </div>
       <span v-else>
         请选择一个门户布局设置
       </span>
@@ -60,10 +66,12 @@
 
 <script>
 import draggable from 'vuedraggable'
+import thumbnail from './thumbnail/thumbnail.vue'
 import { v4 } from 'uuid'
 export default {
   components: {
-    draggable
+    draggable,
+    thumbnail
   },
   data () {
     return {
@@ -79,14 +87,8 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '100%',
-              defaultValue: '',
-              required: false,
-              disabled: false,
-              dataType: 'string',
-              placeholder: '',
-              regEx: '',
-              maxlength: 30
+              title: '富文本',
+              showTitle: true
             },
             key: v4()
           },
@@ -241,21 +243,6 @@ export default {
           }
         ],
         key: v4()
-      },
-      elseItem: {
-        title: '其它字段',
-        child: [{
-          title: '表单标题',
-          type: 'title',
-          icon: 'biaoti',
-          value: '标题',
-          options: {
-            align: 'center',
-            fontSize: '18px'
-          },
-          key: ''
-        }],
-        key: ''
       }
     }
   },
@@ -363,7 +350,7 @@ export default {
             type: 'richText',
             icon: 'el-icon-edit-outline',
             value: '',
-            code: '',
+            code: 'element',
             options: {
               width: '100%',
               defaultValue: '',
@@ -381,7 +368,7 @@ export default {
             type: 'echarts',
             icon: 'el-icon-s-data',
             value: '',
-            code: '',
+            code: 'element',
             options: {
               width: '100%',
               defaultValue: '',
@@ -398,7 +385,7 @@ export default {
             type: 'image',
             icon: 'el-icon-picture',
             value: '',
-            code: '',
+            code: 'element',
             options: {
               width: '120px',
               min: 0,
@@ -413,7 +400,7 @@ export default {
             type: 'card',
             icon: 'el-icon-bank-card',
             value: '',
-            code: '',
+            code: 'element',
             options: {
               width: '120px',
               min: 0,
@@ -447,18 +434,32 @@ export default {
     },
     subOption (index) {
       this.element.cols.splice(index, 1)
-    },
-    addOption () {
-      this.element.cols.push({
-        span: 6,
-        list: [
-        ]
+      this.element.cols.forEach((item) => {
+        item.span = 24 / this.element.cols.length
       })
     },
+    addOption (i) {
+      this.element.cols.splice(i + 1, 0, {
+        span: 6,
+        list: []
+      })
+      this.element.cols.forEach((item) => {
+        item.span = 24 / this.element.cols.length
+      })
+    },
+    rectangleClick (data) {
+      const dataLength = data.reduce((total, item) => {
+        return total + item
+      }, 0)
+      this.element.cols.forEach((item, index) => {
+        item.span = (data[index] / dataLength) * 24
+      })
+    }
   },
   mounted () {
     // 选择元素控件
     this.$EventBus.$on("chooseElement", (data) => {
+      console.log('选择元素控件', data)
       this.element = data
       if (data.code === 'element') {
         this.activeName = 'element'
@@ -468,7 +469,6 @@ export default {
     this.$EventBus.$on("chooseGrid", (data) => {
       this.element = data
       this.activeName = 'layout'
-      console.log(data)
     })
     // 添加控件之后，初始化控件key值
     this.$EventBus.$on('addCell', () => {
@@ -497,23 +497,19 @@ export default {
 .left-cell {
   cursor: pointer;
   height: 30px;
-  line-height: 30px;
-  width: 100px;
-  background-color: #ecf5ff;
+  width: 115px;
+  background-color: #E9EDF6;
   margin: 0 10px 10px 0;
+  padding-left: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   &:hover {
     background-color: #DCE7FE;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     outline: 1px dashed #4E89F8;
   }
   i {
-    margin-right: 5px;
+    margin-right: 8px;
   }
 }
 .iconfont  {
@@ -524,9 +520,6 @@ export default {
   //height: 100px;
   //line-height: 100px;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   outline: 1px dashed #4E89F8;
   background-color: #DCE7FE;
 }
@@ -538,10 +531,18 @@ export default {
   border: none;
   padding: 5px;
 }
-.setting-content {
-  padding: 0 15px;
+.setting-content,
+.click-content{
   &>.title {
+    padding-left: 15px;
     margin-bottom: 10px;
+    font-size: 14px;
+    color: #666;
+    text-align: left;
+  }
+  &>.sec-title {
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
   .setting-line {
     height: 32px;
@@ -549,6 +550,7 @@ export default {
     display: flex;
     align-items: center;
     font-size: 14px;
+    justify-content: center;
     &>.index {
       width: 80px;
       text-align: left;
@@ -556,13 +558,20 @@ export default {
     }
     &>i {
       font-size: 20px;
+      cursor: pointer;
     }
     .el-input-number {
       margin-right: 10px;
     }
     .el-icon-circle-close {
-      margin-right: 6px;
+      margin-left: 6px;
     }
   }
+}
+.el-collapse {
+  padding: 0;
+}
+.tabs-content {
+  padding: 0 15px;
 }
 </style>

@@ -1,6 +1,21 @@
 <template>
     <div class="cell" :class="{'active': chooseGridKey === data.key}" @click="chooseGrid">
-      <div class="mover" @click="chooseGrid">
+      <div class="mover">
+        <el-popover
+            v-model="popoverShow"
+            placement="bottom"
+            title="插入"
+            width="150"
+            popper-class="add-group-popover"
+            trigger="click">
+          <i slot="reference" @click.stop class="el-icon-circle-plus-outline"></i>
+          <div class="add-group">
+            <div @click="addGrid(index, 1)"><i class="el-icon-s-grid"></i>一列布局行</div>
+            <div @click="addGrid(index, 2)"><i class="el-icon-s-grid"></i>二列布局行</div>
+            <div @click="addGrid(index, 3)"><i class="el-icon-s-grid"></i>三列布局行</div>
+            <div @click="addGrid(index, 4)"><i class="el-icon-s-grid"></i>四列布局行</div>
+          </div>
+        </el-popover>
         <i @click.stop="deletePanel" class="el-icon-circle-close"></i>
       </div>
       <div>
@@ -58,6 +73,11 @@ export default {
       default: ''
     }
   },
+  data () {
+    return {
+      popoverShow: false
+    }
+  },
   methods: {
     syncList (value) {
       this.$emit('syncList', value)
@@ -76,12 +96,34 @@ export default {
       }
     },
     chooseGrid () {
+      console.log('点击了chooseGrid', this.data)
       this.$emit('choose-grid', this.data)
+    },
+    addGrid (index, length) {
+      this.$emit('add-grid', {index, length})
+      this.popoverShow = false
     }
   }
 }
 </script>
 
+<style>
+.add-group-popover {
+  padding: 0 !important;
+  .el-popover__title {
+    padding: 0 10px;
+    height: 32px;
+    font-size: 14px;
+    font-weight: 550;
+    line-height: 32px;
+    background-color: #f3f3f3;
+    text-align: center;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0;
+  }
+}
+</style>
 <style lang="scss" scoped>
 .cell {
   background-color: #E9EDF6;
@@ -100,6 +142,9 @@ export default {
     i {
       cursor: pointer;
     }
+    .el-icon-circle-plus-outline {
+      margin-right: 10px;
+    }
   }
 }
 .active {
@@ -108,37 +153,16 @@ export default {
 .el-form-item {
   margin-bottom: 0;
 }
-.action-copy {
-  position: absolute;
-  bottom: -15px;
-  right: 60px;
-  height: 30px;
-  width: 30px;
-  background-size: 18px 18px;
-  background-color: #ecf5ff;
-  border-color: #409eff;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 1px solid #409eff;
-  z-index: 1;
-}
-.action-copy:hover {
-  background-color: #409eff;
-}
-.action-delete {
-  position: absolute;
-  bottom: -15px;
-  right: 15px;
-  height: 30px;
-  width: 30px;
-  background-size: 15px 15px;
-  background-color: #fef0f0;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 1px solid #f56c6c;
-  z-index: 1;
-}
-.action-delete:hover {
-  background-color: #f56c6c;
+.add-group {
+  &>div {
+    padding: 6px 16px;
+    cursor: pointer;
+    &:hover {
+      background-color: #F1F1F1;
+    }
+    &> i {
+      margin-right: 6px;
+    }
+  }
 }
 </style>

@@ -20,6 +20,7 @@
             @delete-panel="deletePanel(i)"
             @syncList="syncList"
             @update="update"
+            @add-grid="addGrid"
         />
         <el-empty v-if="!list.length" description="拖拽布局控件到这里"></el-empty>
       </draggable>
@@ -30,6 +31,7 @@
 import Cell from './Cell.vue'
 import draggable from 'vuedraggable'
 import { cloneDeep } from 'lodash-es'
+import { v4 } from 'uuid'
 
 export default {
   props: {
@@ -69,17 +71,6 @@ export default {
       console.log(e, 'e')
       console.log(this.list, 'this.list')
       let newFormList = cloneDeep(this.list)
-      // let form
-      // if (e.moved) {
-      //   form = e.moved.element
-      //   // eslint-disable-next-line no-unused-vars
-      //   let newIndex = e.moved.newIndex
-      //   // eslint-disable-next-line no-unused-vars
-      //   let oldIndex = e.moved.oldIndex
-      //   newFormList[newIndex] = form
-      //   newFormList[oldIndex] = this.originList[newIndex]
-      //   this.syncList(newFormList)
-      // }
       this.originList = cloneDeep(this.list)
       this.syncList(newFormList)
       if (e.added) {
@@ -87,18 +78,33 @@ export default {
       }
       this.$forceUpdate()
     },
+    // 添加栅格
+    addGrid ({index, length}) {
+      let grid = {
+        title: '一列',
+        type: 'grid',
+        icon: 'el-icon-s-grid',
+        cols: [],
+        code: 'grid',
+        key: v4()
+      }
+      for (let i = 0; i < length; i++) {
+        grid.cols.push({
+          span: 24 / length,
+          list: []
+        })
+      }
+      this.list.splice(index + 1, 0, grid)
+      this.originList = cloneDeep(this.list)
+    },
     deletePanel (i) {
       this.list.splice(i, 1)
       this.originList = cloneDeep(this.list)
     },
     update ({data, index}) {
-      this.list[index] = data
+      // 用$set方法更新数组，否则无法触发子组件的更新
+      this.$set(this.list, index, data)
       this.originList = cloneDeep(this.list)
-    },
-    updateGrid (val) {
-      this.list[0] = val
-      this.originList = cloneDeep(this.list)
-      this.$forceUpdate()
     },
     clear () {
       this.list = []
@@ -128,6 +134,11 @@ export default {
       },
       immediate: true
     }
+  },
+  mounted () {
+    this.$EventBus.$on('chooseElement', () => {
+      this.chooseGridKey = ''
+    })
   }
 }
 </script>
@@ -151,10 +162,12 @@ export default {
   height: 200px;
 }
 /deep/ .left-cell {
-  width: 100%;
+  width: 98%;
   height: 100px;
   outline: 2px dashed #4E89F8;
-  //margin: 20px auto;
+  margin: 10px auto;
   background-color: transparent;
+  display: flex;
+  justify-content: center;
 }
 </style>

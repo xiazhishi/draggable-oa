@@ -1,7 +1,7 @@
 <template>
-  <div class="cell">
+  <div class="cell" @click.stop="chooseElement">
     <div>
-      <div class="grey" @click.stop="chooseElement">
+      <div class="grey">
         <span>{{ data.title }}</span>
         <i @click.stop="deleteItem" class="el-icon-close"></i>
       </div>
@@ -77,14 +77,13 @@ export default {
 <style lang="scss" scoped>
 .cell {
   background-color: #E9EDF6;
-  padding: 10px 0;
+  padding-bottom: 10px;
   position: relative;
-  cursor: move;
+  cursor: pointer;
   .grey {
     display: flex;
     font-size: 14px;
     justify-content: space-between;
-    cursor: move;
     padding: 6px 16px;
     border-bottom: 1px solid #ccc;
     background-color: #fff;
@@ -94,7 +93,6 @@ export default {
     }
   }
   .content {
-    cursor: auto;
     overflow-x: auto;
     height: 300px;
     overflow-y: auto;
