@@ -11,6 +11,7 @@
         <div class="header">
           <div class="name"></div>
           <div class="groups">
+            <el-button size="mini" @click="toPreview">预览</el-button>
             <el-button size="mini" @click="showDialog">元素边距</el-button>
             <el-button size="mini" @click="clear">清空布局</el-button>
             <el-button size="mini" type="primary" @click="save">保存</el-button>
@@ -85,6 +86,11 @@ export default {
     }
   },
   methods: {
+    toPreview () {
+      this.$router.push({
+        path: '/preview'
+      })
+    },
     setColorToAll ({backgroundColor, color}) {
       this.$refs.panel.setColorToAll({backgroundColor, color})
     },

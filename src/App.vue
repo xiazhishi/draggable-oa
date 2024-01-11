@@ -1,20 +1,14 @@
 <template>
   <div id="app">
-<!--    <gridTest/>-->
-    <demo-drag></demo-drag>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-// import gridTest from "@/components/gridTest.vue";
-import demoDrag from "@/components/demoDrag.vue";
 
 export default {
   name: 'App',
   components: {
-    // HelloWorld,
-    // gridTest
-    demoDrag
   }
 }
 </script>

@@ -1,0 +1,140 @@
+//适配
+@mixin heightVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    height: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    height: $size * 100vh / $height;
+  }
+}
+@mixin marginTopVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    margin-top: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    margin-top: $size * 100vh / $height;
+  }
+}
+@mixin marginBottomVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    margin-bottom: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    margin-bottom: $size * 100vh / $height;
+  }
+}
+@mixin paddingTopVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    padding-top: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    padding-top: $size * 100vh / $height;
+  }
+}
+@mixin paddingBottomVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    padding-bottom: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    padding-bottom: $size * 100vh / $height;
+  }
+}
+@mixin lineHeightVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    line-height: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    line-height: $size * 100vh / $height;
+  }
+}
+// 用于宽高相等
+@mixin widthVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    width: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    width: $size * 100vh / $height;
+  }
+}
+@mixin borderRadiusVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    border-radius: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    border-radius: $size * 100vh / $height;
+  }
+}
+@mixin topVh($size, $height: 1080px, $minHeight: 800px) {
+  @media screen and (max-height: $minHeight) {
+    top: $size / $height * $minHeight;
+  }
+  @media screen and (min-height: $minHeight) {
+    top: $size * 100vh / $height;
+  }
+}
+
+@mixin widthVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    width: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    width: $size * 100vw / $width;
+  }
+}
+@mixin marginLeftVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    margin-left: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    margin-left: $size * 100vw / $width;
+  }
+}
+@mixin marginRightVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    margin-right: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    margin-right: $size * 100vw / $width;
+  }
+}
+@mixin paddingRightVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    padding-right: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    padding-right: $size * 100vw / $width;
+  }
+}
+@mixin paddingLeftVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    padding-left: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    padding-left: $size * 100vw / $width;
+  }
+}
+@mixin leftVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    left: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    left: $size * 100vw / $width;
+  }
+}
+@mixin rightVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    right: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    right: $size * 100vw / $width;
+  }
+}
+
+@mixin fontSizeVw($size, $width: 1920px, $minWidth: 1200px) {
+  @media screen and (max-width: $minWidth) {
+    font-size: $size / $width * $minWidth;
+  }
+  @media screen and (min-width: $minWidth) {
+    font-size: $size * 100vw / $width;
+  }
+}

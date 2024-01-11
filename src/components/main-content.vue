@@ -100,7 +100,6 @@ export default {
       this.originList = cloneDeep(this.list)
     },
     update ({data, index}) {
-      // 用$set方法更新数组，否则无法触发子组件的更新
       this.$set(this.list, index, data)
       this.originList = cloneDeep(this.list)
     },

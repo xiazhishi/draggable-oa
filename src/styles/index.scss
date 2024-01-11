@@ -1,0 +1,27 @@
+@import "animation";
+@import "component";
+@import "common";
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  -webkit-touch-callout: none;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-backface-visibility: hidden;
+  -webkit-user-drag: none;
+  -ms-content-zooming: none;
+}
+
+/* iconfont默认样式 */
+.iconfont {
+  display: inline-block;
+  width: 24px;
+  font-size: 18px;
+  text-align: center;
+}

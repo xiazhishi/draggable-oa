@@ -10,10 +10,6 @@ export default {
     options: {
       type: Object,
       default: () => {}
-    },
-    data: {
-      type: Object,
-      default: () => {}
     }
   },
   methods: {
@@ -41,10 +37,15 @@ export default {
         }
       },
       deep: true,
-      immediate: true
     }
   },
-  mounted() {
+  created () {
+    console.log(this.options, 'options')
+    if (this.options.source.code) {
+      setTimeout(() => {
+        this.initChart()
+      }, 1000)
+    }
   }
 }
 </script>

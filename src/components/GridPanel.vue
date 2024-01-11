@@ -6,7 +6,6 @@
             :data="item"
             v-for="(item, j) in col.list"
             :key="j"
-            :form-attr="formAttr"
             :prop-key="propKey"
             :prop-index="i"
             @syncList="syncList"
@@ -32,16 +31,6 @@ export default {
     GridCell
   },
   props: {
-    formAttr: {
-      type: Object,
-      default: function () {
-        return {
-          align: 'top',
-          size: 'medium',
-          labelWidth: 80
-        }
-      }
-    },
     propKey: {
       type: String,
       default: ''
@@ -71,22 +60,7 @@ export default {
   },
   data () {
     return {
-      data: {
-        title: '栅格布局',
-        type: 'grid',
-        icon: '/static/img/form-design/grid.png',
-        cols: [
-          {
-            span: 12,
-            list: []
-          },
-          {
-            span: 12,
-            list: []
-          }
-        ],
-        key: v4()
-      },
+      data: {}
     }
   },
   methods: {
@@ -111,16 +85,13 @@ export default {
     deleteItem (item, j) {
       item.list.splice(j, 1)
       this.$emit('update', this.data)
+    },
+    update (val) {
+      this.data = val
     }
   },
-  watch: {
-    propData: {
-      handler: function (value) {
-        this.data = cloneDeep(value)
-      },
-      deep: true,
-      immediate: true
-    }
+  mounted () {
+    this.data = this.propData
   }
 }
 </script>

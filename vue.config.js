@@ -1,5 +1,12 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-  lintOnSave: false
+  lintOnSave: false,
+  css: {
+    loaderOptions: {
+      less: {
+        javascriptEnabled: true,
+      }
+    }
+  }
 })

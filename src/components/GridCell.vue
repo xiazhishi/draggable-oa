@@ -10,7 +10,7 @@
       <div class="content"
            :style="{'height': data.options.isAutoHeight ? 'fit-content' : data.options.height + 'px',
             'overflow': data.options.overflowShow ? 'auto' : 'hidden'}">
-        <rich-text v-if="data.type === 'richText'"></rich-text>
+        <rich-text v-if="data.type === 'richText'" :options="data.options"></rich-text>
         <echarts-vue v-if="data.type === 'echarts'" :options="data.options"></echarts-vue>
         <imageVue v-if="data.type === 'image'" :options="data.options"></imageVue>
         <card v-if="data.type === 'card'"></card>
@@ -44,16 +44,6 @@ export default {
     imageVue
   },
   props: {
-    formAttr: {
-      type: Object,
-      default: function () {
-        return {
-          align: 'top',
-          size: 'medium',
-          labelWidth: 80
-        }
-      }
-    },
     data: {
       type: Object,
       default: function () {
@@ -118,7 +108,9 @@ export default {
     display: flex;
     font-size: 14px;
     justify-content: space-between;
-    padding: 6px 16px;
+    align-items: center;
+    padding: 8px 16px;
+    height: 40px;
     border-bottom: 1px solid #ccc;
     i {
       font-size: 20px;

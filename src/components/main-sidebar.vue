@@ -27,10 +27,8 @@
                 class="drag"
             >
               <div class="left-cell" v-for="(item, i) in base.child" :key="i" :title="item.title">
-                <p class="left">
-                  <i :class="item.icon"></i>
-                </p>
-                <p class="right">{{item.title}}</p>
+                <i :class="item.icon"></i>
+                <div class="right">{{item.title}}</div>
               </div>
             </draggable>
           </el-collapse-item>
@@ -140,7 +138,8 @@ export default {
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false
+              overflowShow: false,
+              richTextValue: ''
             },
             isChoose: false,
             key: v4()
@@ -396,7 +395,8 @@ export default {
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false
+              overflowShow: false,
+              richTextValue: ''
             },
             isChoose: false,
             key: v4()
