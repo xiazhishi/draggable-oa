@@ -58,8 +58,49 @@
       </span>
     </el-tab-pane>
     <el-tab-pane label="元素属性" name="element">
-      <span v-if="element && element.code === 'element'">选中的元素：{{element.title}}</span>
+      <div v-if="element && element.code === 'element'" class="element-content">
+        <el-form ref="form" :model="element.options" label-width="100px" label-position="left">
+           <el-form-item label="标题">
+              <el-input v-model="element.options.title"></el-input>
+            </el-form-item>
+            <el-form-item label="元素头">
+              <el-switch v-model="element.options.showTitle"></el-switch>
+            </el-form-item>
+            <el-form-item label="背景色">
+              <el-color-picker v-model="element.options.backgroundColor"></el-color-picker>
+            </el-form-item>
+            <el-form-item label="文字颜色">
+              <el-color-picker v-model="element.options.color"></el-color-picker>
+            </el-form-item>
+            <el-form-item label="统一所有元素主题">
+              <el-button @click="setColorToAll" class="set-button">统一所有元素主题</el-button>
+            </el-form-item>
+            <el-form-item v-if="element.type === 'image'" label="所属目录">
+              <el-button @click="sourceVisible = true">选择来源</el-button>
+            </el-form-item>
+            <el-form-item v-if="element.type === 'echarts'" label="所属目录">
+              <el-button @click="echartsVisible = true">选择来源</el-button>
+            </el-form-item>
+            <el-form-item label="元素高度">
+              <el-radio-group v-model="element.options.isAutoHeight">
+                <el-radio :label="true">自动高度</el-radio>
+                <el-radio :label="false">自定义</el-radio>
+              </el-radio-group>
+               <el-input v-if="!element.options.isAutoHeight" v-model="element.options.height">
+                  <template slot="append">px</template>
+               </el-input>
+            </el-form-item>
+            <el-form-item label="纵向滚动">
+              <el-switch
+                  v-model="element.options.overflowShow"
+                  active-color="#13ce66">
+              </el-switch>
+            </el-form-item>
+        </el-form>
+      </div>
       <span v-else>请选择元素</span>
+      <imgSource v-if="sourceVisible" v-model="sourceVisible" :list="element.options.sourceList" @confirm="changeImg"></imgSource>
+      <echartsSource v-if="echartsVisible" v-model="echartsVisible" :obj="element.options.source" @confirm="changeEcharts"></echartsSource>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -67,14 +108,20 @@
 <script>
 import draggable from 'vuedraggable'
 import thumbnail from './thumbnail/thumbnail.vue'
+import imgSource from './common/imgSource.vue'
+import echartsSource from './common//echartsSource.vue'
 import { v4 } from 'uuid'
 export default {
   components: {
     draggable,
-    thumbnail
+    thumbnail,
+    imgSource,
+    echartsSource
   },
   data () {
     return {
+      sourceVisible: false,
+      echartsVisible: false,
       activeName: 'portalControl',
       element: null,
       base: {
@@ -88,8 +135,14 @@ export default {
             code: 'element',
             options: {
               title: '富文本',
-              showTitle: true
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false
             },
+            isChoose: false,
             key: v4()
           },
           {
@@ -99,13 +152,14 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '100%',
-              defaultValue: '',
-              required: false,
-              disabled: false,
-              placeholder: '',
-              regEx: '',
-              maxlength: 100
+              title: '图表',
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false,
+              source: {}
             },
             key: v4()
           },
@@ -116,11 +170,14 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '120px',
-              min: 0,
-              max: 100,
-              required: false,
-              disabled: false
+              title: '图片',
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false,
+              sourceList: []
             },
             key: v4()
           },
@@ -131,36 +188,17 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '120px',
-              min: 0,
-              max: 100,
-              required: false,
-              disabled: false
+              title: '卡片',
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false
             },
             key: v4()
           }
         ]
-      },
-      senior: {
-        title: '高级字段',
-        child: [
-          {
-            title: '意见框',
-            type: 'idea',
-            code: '',
-            icon: 'duohangwenben',
-            options: {
-              width: '100%',
-              defaultValue: '',
-              required: false,
-              disabled: false,
-              placeholder: '',
-              regEx: '',
-              maxlength: 300
-            }
-          }
-        ],
-        key: v4()
       },
       layout: {
         title: '布局控件',
@@ -352,15 +390,15 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '100%',
-              defaultValue: '',
-              required: false,
-              disabled: false,
-              dataType: 'string',
-              placeholder: '',
-              regEx: '',
-              maxlength: 30
+              title: '富文本',
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false
             },
+            isChoose: false,
             key: v4()
           },
           {
@@ -370,13 +408,14 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '100%',
-              defaultValue: '',
-              required: false,
-              disabled: false,
-              placeholder: '',
-              regEx: '',
-              maxlength: 100
+              title: '图表',
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false,
+              source: {}
             },
             key: v4()
           },
@@ -387,11 +426,14 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '120px',
-              min: 0,
-              max: 100,
-              required: false,
-              disabled: false
+              title: '图片',
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false,
+              sourceList: []
             },
             key: v4()
           },
@@ -402,11 +444,13 @@ export default {
             value: '',
             code: 'element',
             options: {
-              width: '120px',
-              min: 0,
-              max: 100,
-              required: false,
-              disabled: false
+              title: '卡片',
+              showTitle: true,
+              backgroundColor: '#fff',
+              color: '#333',
+              height: 260,
+              isAutoHeight: false,
+              overflowShow: false
             },
             key: v4()
           }
@@ -423,14 +467,6 @@ export default {
     },
     handleClick (tab, event) {
       console.log(tab, event)
-    },
-    setSecondRatio (first, second) {
-      const firstRate = first / (first + second)
-      const secondRate = second / (first + second)
-      this.element.cols[0].span = 24 * firstRate
-      this.element.cols[1].span = 24 * secondRate
-      console.log(this.element, '修改后的element')
-      this.$emit('setSecondRatio', this.element)
     },
     subOption (index) {
       this.element.cols.splice(index, 1)
@@ -454,12 +490,24 @@ export default {
       this.element.cols.forEach((item, index) => {
         item.span = (data[index] / dataLength) * 24
       })
+    },
+    setColorToAll () {
+      if (!this.element) return
+      this.$emit('set-color-to-all', {
+        backgroundColor: this.element.options.backgroundColor,
+        color: this.element.options.color
+      })
+    },
+    changeImg (arr) {
+      this.element.options.sourceList = arr
+    },
+    changeEcharts (obj) {
+      this.element.options.source = obj
     }
   },
   mounted () {
     // 选择元素控件
     this.$EventBus.$on("chooseElement", (data) => {
-      console.log('选择元素控件', data)
       this.element = data
       if (data.code === 'element') {
         this.activeName = 'element'
@@ -475,7 +523,7 @@ export default {
       this.init()
     })
     // 选中栅格布局之后，当布局内容发生变化时，更新数据
-    this.$EventBus.$on('update-grid', (data) => {
+    this.$EventBus.$on('updateGrid', (data) => {
       this.element = data
     })
   },
@@ -487,7 +535,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .drag {
   display: flex;
   flex-wrap: wrap;
@@ -573,5 +621,15 @@ export default {
 }
 .tabs-content {
   padding: 0 15px;
+}
+.element-content {
+  padding: 0 12px;
+  .set-button {
+    margin-bottom: 27px;
+    margin-top: -13px;
+  }
+  /deep/ .el-form-item__content {
+    text-align: left;
+  }
 }
 </style>

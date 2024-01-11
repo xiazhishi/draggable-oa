@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="10">
     <el-col :span="col.span" v-for="(col, i) in data.cols" :key="i" class="col">
-      <draggable class="dragArea" :class="{ 'empty-drag': !col.list.length }" handle=".grey" @change="log" :list="col.list" :group="{ name: 'form-design-inner'}" animation="200">
+      <draggable class="dragArea" :class="{ 'empty-drag': !col.list.length }" @change="log" :list="col.list" :group="{ name: 'form-design-inner'}" animation="200">
         <GridCell
             :data="item"
             v-for="(item, j) in col.list"
@@ -86,7 +86,7 @@ export default {
           }
         ],
         key: v4()
-      }
+      },
     }
   },
   methods: {
@@ -95,6 +95,7 @@ export default {
       window.console.log(evt)
       // 处理从外部拖进栅格的表单元素
       this.$emit('update', this.data)
+      this.$EventBus.$emit('addCell')
     },
     syncList (value, index) {
       let formList = cloneDeep(this.data)
@@ -112,7 +113,6 @@ export default {
       this.$emit('update', this.data)
     }
   },
-  mounted () {},
   watch: {
     propData: {
       handler: function (value) {

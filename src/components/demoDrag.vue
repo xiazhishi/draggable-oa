@@ -1,26 +1,44 @@
 <template>
   <div class="demo-drag">
-    <div class="header">
-      <div class="name">
-        <i class="el-icon-setting"></i>
-        <span>测试门户</span>
-      </div>
-      <div class="groups">
-        <el-button size="mini" type="primary" @click="save">保存</el-button>
-        <el-button size="mini" @click="clear">清空布局</el-button>
-      </div>
-    </div>
     <el-row>
       <el-col style="width: 319px;border-right: 1px solid #ccc;">
-        <main-sidebar @setSecondRatio="setSecondRatio" @clear="clear" />
+        <main-sidebar @set-color-to-all="setColorToAll" @clear="clear" />
       </el-col>
       <el-col
-          style="height:calc(100vh - 66px); width: calc(100% - 232px);overflow-y: auto;"
+          style="height:100vh; width: calc(100% - 232px);"
           id="form-center"
       >
+        <div class="header">
+          <div class="name"></div>
+          <div class="groups">
+            <el-button size="mini" @click="showDialog">元素边距</el-button>
+            <el-button size="mini" @click="clear">清空布局</el-button>
+            <el-button size="mini" type="primary" @click="save">保存</el-button>
+          </div>
+        </div>
         <main-content ref="panel" :formAttr="formAttr" :local-list="localList"/>
       </el-col>
     </el-row>
+    <el-dialog
+        title="元素边距设置"
+        :visible.sync="dialogVisible"
+        :append-to-body="true"
+        :close-on-click-modal="false"
+        width="30%">
+      <span>
+        <el-form label-width="100px">
+          <el-form-item label="元素边距">
+            <el-input v-model="elementMargin">
+              <template slot="append">px</template>
+            </el-input>
+          </el-form-item>
+        </el-form>
+      </span>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click.stop="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click.stop="changeMargin">确 定</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -54,7 +72,6 @@ export default {
       },
       dialogFormVisible: false,
       dialogVisible: false,
-      dialogVisible_newVersion: false,
       tabIndex: '0',
       saveData: {
         code: '',
@@ -62,22 +79,14 @@ export default {
         name: '',
         remarks: ''
       },
-      dataForm: {
-        name: '',
-        code: ''
-      },
       defaultValueList: [],
-      id: ''
+      id: '',
+      elementMargin: 0
     }
   },
   methods: {
-    changeCell (value) {
-      console.log(value)
-      this.$refs.panel.updateGrid(value)
-    },
-    setSecondRatio (value) {
-      console.log(value)
-      // this.$refs.panel.setSecondRatio(value)
+    setColorToAll ({backgroundColor, color}) {
+      this.$refs.panel.setColorToAll({backgroundColor, color})
     },
     save () {
       localStorage.setItem('formList', JSON.stringify(this.$refs.panel.list))
@@ -95,11 +104,17 @@ export default {
         message: '清除成功',
         type: 'success'
       });
+    },
+    showDialog () {
+      this.elementMargin = this.$store.state.formDesign.elementMargin
+      this.dialogVisible = true
+    },
+    changeMargin () {
+      this.$store.commit('formDesign/updateElementMargin', this.elementMargin)
+      this.dialogVisible = false
     }
   },
   mounted () {
-    // this.reset()
-    // this.init()
     if (localStorage.getItem('formList')) {
       this.localList = JSON.parse(localStorage.getItem('formList'))
       console.log(this.localList)
@@ -114,30 +129,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.form-design .el-tabs__nav {
-  width: 100%;
-}
-.form-design .el-tabs__nav .el-tabs__active-bar {
-  width: 50%;
-  transform: translateX(0px);
-}
-.form-design .el-tabs__nav .el-tabs__item {
-  width: 50%;
-  text-align: center;
-}
-.form-design .el-tabs__header {
-  width: 232px;
-  height: 40px;
-  z-index: 1;
-  background-color: #fff;
-}
-.form-design .el-tabs__content {
-  position: relative;
-  top: 55px;
-}
-.form-design .el-form-item__label {
-  line-height: 20px;
-}
 .header {
   background-color: #FAFBFC;
   display: flex;
@@ -163,6 +154,15 @@ export default {
   &>.el-row {
     flex: 1;
     display: flex;
+  }
+}
+/deep/ .el-dialog {
+  text-align: left;
+  .el-dialog__header {
+    font-size: 22px;
+  }
+  .el-dialog__body {
+    font-size: 16px !important;
   }
 }
 </style>

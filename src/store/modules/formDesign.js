@@ -1,12 +1,21 @@
 export default {
     namespaced: true,
     state: {
-        grid: null
+        chooseGridKey: '',
+        chooseElementKey: '',
+        elementMargin: 10,
     },
     mutations: {
-        updateGrid (state, value) {
-            console.log('updateGrid', value)
-            state.grid = value
+        updateGridKey (state, value) {
+            state.chooseGridKey = value
+            state.chooseElementKey = ''
+        },
+        updateElementKey (state, value) {
+            state.chooseElementKey = value
+            state.chooseGridKey = ''
+        },
+        updateElementMargin (state, value) {
+            state.elementMargin = value
         }
     },
     actions: {

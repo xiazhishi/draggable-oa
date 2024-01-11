@@ -1,17 +1,33 @@
 <template>
-  <div class="cell" @click.stop="chooseElement">
+  <div class="cell" @click.stop="chooseElement"
+       :style="{'margin-bottom': elementMargin + 'px'}">
     <div>
-      <div class="grey">
-        <span>{{ data.title }}</span>
-        <i @click.stop="deleteItem" class="el-icon-close"></i>
+      <div v-if="data.options.showTitle" class="grey"
+           :style="{backgroundColor: data.options.backgroundColor, color: data.options.color}">
+        <span>{{ data.options.title }}</span>
+        <i @click.stop="dialogVisible = true" class="el-icon-close"></i>
       </div>
-      <div class="content">
+      <div class="content"
+           :style="{'height': data.options.isAutoHeight ? 'fit-content' : data.options.height + 'px',
+            'overflow': data.options.overflowShow ? 'auto' : 'hidden'}">
         <rich-text v-if="data.type === 'richText'"></rich-text>
-        <echarts-vue v-if="data.type === 'echarts'" :data="data"></echarts-vue>
-        <imageVue v-if="data.type === 'image'"></imageVue>
+        <echarts-vue v-if="data.type === 'echarts'" :options="data.options"></echarts-vue>
+        <imageVue v-if="data.type === 'image'" :options="data.options"></imageVue>
         <card v-if="data.type === 'card'"></card>
       </div>
     </div>
+    <el-dialog
+        title="确认信息"
+        :visible.sync="dialogVisible"
+        :append-to-body="true"
+        width="30%">
+      <span>确定要移除该元素吗？</span>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click.stop="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click.stop="deleteItem">确 定</el-button>
+        </span>
+    </el-dialog>
+    <div v-if="data.key === chooseElementKey" class="active"></div>
   </div>
 </template>
 
@@ -63,12 +79,31 @@ export default {
       type: Number
     }
   },
+  computed: {
+    chooseElementKey () {
+      return this.$store.state.formDesign.chooseElementKey
+    },
+    elementMargin () {
+      return this.$store.state.formDesign.elementMargin
+    }
+  },
   methods: {
     deleteItem () {
       this.$emit('delete-item')
+      if (this.data.key === this.chooseElementKey) {
+        this.$store.commit('formDesign/updateElementKey', '')
+        this.$EventBus.$emit("chooseElement", null)
+      }
+      this.dialogVisible = false
     },
     chooseElement () {
+      this.$store.commit('formDesign/updateElementKey', this.data.key);
       this.$EventBus.$emit("chooseElement", this.data);
+    }
+  },
+  data () {
+    return {
+      dialogVisible: false
     }
   }
 }
@@ -77,7 +112,6 @@ export default {
 <style lang="scss" scoped>
 .cell {
   background-color: #E9EDF6;
-  padding-bottom: 10px;
   position: relative;
   cursor: pointer;
   .grey {
@@ -86,7 +120,6 @@ export default {
     justify-content: space-between;
     padding: 6px 16px;
     border-bottom: 1px solid #ccc;
-    background-color: #fff;
     i {
       font-size: 20px;
       cursor: pointer;
@@ -94,15 +127,28 @@ export default {
   }
   .content {
     overflow-x: auto;
-    height: 300px;
     overflow-y: auto;
+    background-color: #fff;
   }
-}
-.cell-active {
-  background-color: #b3d8ff;
-  border-left: 5px solid #409eff;
+  .active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #409eff;
+    box-sizing: border-box;
+    pointer-events: none;
+    background: rgba(0,0,0,.1);
+  }
 }
 .el-form-item {
   margin-bottom: 0;
+}
+/deep/ .el-dialog {
+  text-align: left;
+  .el-dialog__body {
+    font-size: 16px !important;
+  }
 }
 </style>

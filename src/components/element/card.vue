@@ -36,7 +36,7 @@ export default {
 
 .box-card {
   width: calc(100% - 2px);
-  height: 100%;
+  height: 250px;
   margin: 0 auto;
 }
 </style>

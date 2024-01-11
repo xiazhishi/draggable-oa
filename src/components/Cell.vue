@@ -16,7 +16,7 @@
             <div @click="addGrid(index, 4)"><i class="el-icon-s-grid"></i>四列布局行</div>
           </div>
         </el-popover>
-        <i @click.stop="deletePanel" class="el-icon-circle-close"></i>
+        <i @click.stop="dialogVisible = true" class="el-icon-circle-close"></i>
       </div>
       <div>
         <grid-panel
@@ -27,6 +27,17 @@
             @update="update"
         />
       </div>
+      <el-dialog
+          title="确认信息"
+          :visible.sync="dialogVisible"
+          :append-to-body="true"
+          width="30%">
+        <span>确定要删除该布局吗？</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click.stop="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click.stop="deletePanel">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 
@@ -68,14 +79,16 @@ export default {
     index: {
       type: Number
     },
-    chooseGridKey: {
-      type: String,
-      default: ''
-    }
   },
   data () {
     return {
-      popoverShow: false
+      popoverShow: false,
+      dialogVisible: false
+    }
+  },
+  computed: {
+    chooseGridKey () {
+      return this.$store.state.formDesign.chooseGridKey
     }
   },
   methods: {
@@ -83,8 +96,8 @@ export default {
       this.$emit('syncList', value)
     },
     deletePanel () {
-      console.log(this.data)
       this.$emit('delete-panel')
+      this.dialogVisible = false
     },
     update (data) {
       this.$emit('update', {
@@ -92,7 +105,7 @@ export default {
         index: this.index
       })
       if (this.chooseGridKey === this.data.key) {
-        this.$EventBus.$emit('update-grid', data)
+        this.$EventBus.$emit('updateGrid', data)
       }
     },
     chooseGrid () {
@@ -125,6 +138,12 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
+/deep/ .el-dialog {
+  text-align: left;
+  .el-dialog__body {
+    font-size: 16px !important;
+  }
+}
 .cell {
   background-color: #E9EDF6;
   cursor: auto;

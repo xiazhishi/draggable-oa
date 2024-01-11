@@ -11,7 +11,6 @@
       >
         <Cell
             :data="item"
-            :choose-grid-key="chooseGridKey"
             v-for="(item, i) in list"
             :key="i"
             :formAttr="formAttr"
@@ -60,7 +59,6 @@ export default {
     return {
       list: [],
       originList: [],
-      chooseGridKey: ''
     }
   },
   methods: {
@@ -113,10 +111,23 @@ export default {
     chooseGrid (data) {
       this.list.forEach(item => {
         if (item.key === data.key) {
-          this.chooseGridKey = item.key
+          this.$store.commit('formDesign/updateGridKey', item.key)
         }
       })
       this.$EventBus.$emit('chooseGrid', data)
+    },
+    setColorToAll ({backgroundColor, color}) {
+      console.log(this.list)
+      this.list.forEach(item => {
+        item.cols.forEach(ele => {
+          ele.list.forEach(el => {
+            this.$set(el.options, 'backgroundColor', backgroundColor)
+            this.$set(el.options, 'color', color)
+            // el.options.backgroundColor = backgroundColor
+            // el.options.color = color
+          })
+        })
+      })
     }
   },
   filters: {
@@ -139,6 +150,9 @@ export default {
     this.$EventBus.$on('chooseElement', () => {
       this.chooseGridKey = ''
     })
+  },
+  beforeDestroy () {
+    this.$EventBus.$off('chooseElement')
   }
 }
 </script>
@@ -146,8 +160,9 @@ export default {
 <style lang="css" scoped>
 .main {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 68px);
   min-height: 500px;
+  overflow-y: auto;
 }
 .dragArea-empty {
   min-height: 100px;
