@@ -6,12 +6,12 @@
       :close-on-click-modal="false"
       width="30%">
     <div slot="title" class="self-title">
-      <span>搜索图表</span>
+      <span>搜索指标</span>
       <i class="el-icon-close" @click="cancel"></i>
     </div>
     <div class="list">
       <div class="main">
-        <el-select v-model="choose" placeholder="选择图表" filterable>
+        <el-select v-model="choose" placeholder="选择指标" filterable>
           <el-option
               v-for="item in echartsSrcList"
               :key="item.code"

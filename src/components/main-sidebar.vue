@@ -51,52 +51,64 @@
           <thumbnail :cols="element.cols" @rectangle-click="rectangleClick"></thumbnail>
         </div>
       </div>
-      <span v-else>
+      <div v-else class="please-choose" style="text-align: center">
         请选择一个门户布局设置
-      </span>
+      </div>
     </el-tab-pane>
     <el-tab-pane label="元素属性" name="element">
       <div v-if="element && element.code === 'element'" class="element-content">
         <el-form ref="form" :model="element.options" label-width="100px" label-position="left">
            <el-form-item label="标题">
-              <el-input v-model="element.options.title"></el-input>
+              <el-input v-model="element.options.title" size="mini"></el-input>
             </el-form-item>
             <el-form-item label="元素头">
-              <el-switch v-model="element.options.showTitle"></el-switch>
+              <el-checkbox v-model="element.options.hiddenTitle">隐藏</el-checkbox>
             </el-form-item>
-            <el-form-item label="背景色">
-              <el-color-picker v-model="element.options.backgroundColor"></el-color-picker>
+          <el-form-item label="边框">
+            <el-checkbox v-model="element.options.border">隐藏</el-checkbox>
+          </el-form-item>
+            <el-form-item label="主题背景色">
+              <el-color-picker v-model="element.options.backgroundColor" :predefine="predefineColors" size="mini"></el-color-picker>
             </el-form-item>
-            <el-form-item label="文字颜色">
-              <el-color-picker v-model="element.options.color"></el-color-picker>
+            <el-form-item label="主题文字颜色">
+              <el-color-picker v-model="element.options.color" :predefine="predefineColors" size="mini"></el-color-picker>
             </el-form-item>
-            <el-form-item label="统一所有元素主题">
-              <el-button @click="setColorToAll" class="set-button">统一所有元素主题</el-button>
+            <el-form-item label="统一主题颜色">
+              <el-checkbox v-model="changeColor" @change="isNeedChange"></el-checkbox>
             </el-form-item>
             <el-form-item v-if="element.type === 'image'" label="所属目录">
-              <el-button @click="sourceVisible = true">选择来源</el-button>
+              <el-button @click="sourceVisible = true" size="mini">选择来源</el-button>
+<!--              <el-upload-->
+<!--                  class="upload-demo"-->
+<!--                  action="/api/workspace/manager/information/peRecordClass/uploadImage"-->
+<!--                  :headers="{-->
+<!--                  'Cookie': 'SESSION=NzVmODFiMTYtYmM4Yi00Yjg3LThjODUtODdlMzE2ZTVjMjJh; Hm_lvt_620840815a0ae4e017d5820cf0050076=1703055573,1705037728; Hm_lpvt_620840815a0ae4e017d5820cf0050076=1705037728; sso_credentials=b345fe71960c94aed5604a27ef6a6307cc49b7ff; sso_principal=sjy'-->
+<!--                  }"-->
+<!--                  :on-success="UploadSuccess"-->
+<!--                  multiple-->
+<!--                  :limit="3">-->
+<!--                <el-button size="small" type="primary">点击上传</el-button>-->
+<!--                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+<!--              </el-upload>-->
             </el-form-item>
             <el-form-item v-if="element.type === 'echarts'" label="所属目录">
-              <el-button @click="echartsVisible = true">选择来源</el-button>
+              <el-button @click="echartsVisible = true" size="mini">选择来源</el-button>
             </el-form-item>
             <el-form-item label="元素高度">
               <el-radio-group v-model="element.options.isAutoHeight">
                 <el-radio :label="true">自动高度</el-radio>
                 <el-radio :label="false">自定义</el-radio>
               </el-radio-group>
-               <el-input v-if="!element.options.isAutoHeight" v-model="element.options.height">
+               <el-input v-if="!element.options.isAutoHeight" v-model="element.options.height" size="mini">
                   <template slot="append">px</template>
                </el-input>
             </el-form-item>
             <el-form-item label="纵向滚动">
-              <el-switch
-                  v-model="element.options.overflowShow"
-                  active-color="#13ce66">
-              </el-switch>
+              <el-checkbox v-model="element.options.overflowShow">允许</el-checkbox>
             </el-form-item>
         </el-form>
       </div>
-      <span v-else>请选择元素</span>
+      <div v-else class="please-choose" style="text-align: center">请选择一个元素</div>
       <imgSource v-if="sourceVisible" v-model="sourceVisible" :list="element.options.sourceList" @confirm="changeImg"></imgSource>
       <echartsSource v-if="echartsVisible" v-model="echartsVisible" :obj="element.options.source" @confirm="changeEcharts"></echartsSource>
     </el-tab-pane>
@@ -118,6 +130,7 @@ export default {
   },
   data () {
     return {
+      changeColor: false,
       sourceVisible: false,
       echartsVisible: false,
       activeName: 'portalControl',
@@ -133,32 +146,34 @@ export default {
             code: 'element',
             options: {
               title: '富文本',
-              showTitle: true,
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
               overflowShow: false,
-              richTextValue: ''
+              richTextValue: '',
+              border: false
             },
             isChoose: false,
             key: v4()
           },
           {
-            title: '图表',
+            title: '指标',
             type: 'echarts',
             icon: 'el-icon-s-data',
             value: '',
             code: 'element',
             options: {
-              title: '图表',
-              showTitle: true,
+              title: '指标',
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
               overflowShow: false,
-              source: {}
+              source: {},
+              border: false
             },
             key: v4()
           },
@@ -170,13 +185,14 @@ export default {
             code: 'element',
             options: {
               title: '图片',
-              showTitle: true,
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
               overflowShow: false,
-              sourceList: []
+              sourceList: [],
+              border: false
             },
             key: v4()
           },
@@ -188,12 +204,13 @@ export default {
             code: 'element',
             options: {
               title: '卡片',
-              showTitle: true,
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false
+              overflowShow: false,
+              border: false
             },
             key: v4()
           }
@@ -280,7 +297,18 @@ export default {
           }
         ],
         key: v4()
-      }
+      },
+      predefineColors: [
+        '#ff4500',
+        '#ff8c00',
+        '#ffd700',
+        '#90ee90',
+        '#00ced1',
+        '#1e90ff',
+        '#c71585',
+        '#c7158577',
+        '#000000',
+      ]
     }
   },
   methods: {
@@ -390,32 +418,34 @@ export default {
             code: 'element',
             options: {
               title: '富文本',
-              showTitle: true,
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
               overflowShow: false,
-              richTextValue: ''
+              richTextValue: '',
+              border: false
             },
             isChoose: false,
             key: v4()
           },
           {
-            title: '图表',
+            title: '指标',
             type: 'echarts',
             icon: 'el-icon-s-data',
             value: '',
             code: 'element',
             options: {
-              title: '图表',
-              showTitle: true,
+              title: '指标',
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
               overflowShow: false,
-              source: {}
+              source: {},
+              border: false
             },
             key: v4()
           },
@@ -427,13 +457,14 @@ export default {
             code: 'element',
             options: {
               title: '图片',
-              showTitle: true,
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
               overflowShow: false,
-              sourceList: []
+              sourceList: [],
+              border: false
             },
             key: v4()
           },
@@ -445,12 +476,13 @@ export default {
             code: 'element',
             options: {
               title: '卡片',
-              showTitle: true,
+              hiddenTitle: false,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false
+              overflowShow: false,
+              border: false
             },
             key: v4()
           }
@@ -503,6 +535,14 @@ export default {
     },
     changeEcharts (obj) {
       this.element.options.source = obj
+    },
+    isNeedChange (e) {
+      if (e) {
+        this.setColorToAll()
+      }
+    },
+    UploadSuccess (response, file, fileList) {
+      console.log(response)
     }
   },
   mounted () {
@@ -511,6 +551,7 @@ export default {
       this.element = data
       if (data.code === 'element') {
         this.activeName = 'element'
+        this.changeColor = false
       }
     })
     // 选择布局控件
@@ -578,6 +619,13 @@ export default {
 /deep/ .el-collapse {
   border: none;
   padding: 5px;
+  .el-collapse-item__content {
+    padding-bottom: 0;
+  }
+  .el-collapse-item__header {
+    height: 32px !important;
+    line-height: 32px !important;
+  }
 }
 .setting-content,
 .click-content{
@@ -628,8 +676,22 @@ export default {
     margin-bottom: 27px;
     margin-top: -13px;
   }
-  /deep/ .el-form-item__content {
-    text-align: left;
+  /deep/ .el-form-item {
+    margin-bottom: 2px;
+    .el-form-item__content {
+      text-align: left;
+    }
+    .el-radio-group {
+      display: flex;
+      justify-content: space-between;
+      .el-radio {
+        margin-right: 0px;
+      }
+    }
+  }
+  /deep/ .el-color-picker {
+    position: relative;
+    top: 6px;
   }
 }
 </style>

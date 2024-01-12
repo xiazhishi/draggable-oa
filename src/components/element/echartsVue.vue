@@ -44,7 +44,7 @@ export default {
     if (this.options.source.code) {
       setTimeout(() => {
         this.initChart()
-      }, 1000)
+      }, 500)
     }
   }
 }
@@ -56,6 +56,7 @@ export default {
   width: calc(100% - 2px);
   background-color: #fff;
   height: 100%;
+  padding: 10px;
 }
 .default {
   height: 300px !important;

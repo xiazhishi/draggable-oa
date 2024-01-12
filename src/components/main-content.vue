@@ -10,11 +10,12 @@
           ghostClass="ghost"
       >
         <Cell
-            :data="item"
             v-for="(item, i) in list"
             :key="i"
-            :formAttr="formAttr"
+            :data="item"
             :index="i"
+            :list="list"
+            :formAttr="formAttr"
             @choose-grid="chooseGrid"
             @delete-panel="deletePanel(i)"
             @syncList="syncList"
@@ -23,11 +24,23 @@
         />
         <el-empty v-if="!list.length" description="拖拽布局控件到这里"></el-empty>
       </draggable>
+    <el-dialog
+        title="预览"
+        :visible.sync="previewVisible"
+        :append-to-body="true"
+        :close-on-click-modal="false"
+        custom-class="preview-dialog"
+        width="70%">
+      <div>
+        <preview v-if="previewVisible" :propsList="list"></preview>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Cell from './Cell.vue'
+import preview from '../pages/preview.vue'
 import draggable from 'vuedraggable'
 import { cloneDeep } from 'lodash-es'
 import { v4 } from 'uuid'
@@ -53,12 +66,14 @@ export default {
   },
   components: {
     draggable,
-    Cell
+    Cell,
+    preview
   },
   data () {
     return {
+      previewVisible: false,
       list: [],
-      originList: [],
+      originList: []
     }
   },
   methods: {
@@ -127,6 +142,9 @@ export default {
           })
         })
       })
+    },
+    viewPreview () {
+      this.previewVisible = true
     }
   },
   filters: {
@@ -183,5 +201,9 @@ export default {
   background-color: transparent;
   display: flex;
   justify-content: center;
+}
+/deep/ .preview-dialog {
+  height: 80%;
+  overflow: auto;
 }
 </style>

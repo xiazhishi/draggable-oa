@@ -7,16 +7,20 @@ import pathUtils from './util/pathUtils'
 import store from './store'
 import routes from './router/index'
 import VueRouter from "vue-router";
+import pdf from './util/pdf'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.use(VueGridLayout)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
+Vue.use(pdf)
 Vue.prototype.$EventBus = new Vue()
 Vue.prototype.$contextPath = pathUtils.getContextPath
 Vue.prototype.$extend = function () {
   return Object.assign({}, ...arguments)
 }
+Vue.prototype.$axios = axios
 
 const router = new VueRouter({
   mode: 'history',

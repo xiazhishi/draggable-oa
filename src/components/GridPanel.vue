@@ -1,7 +1,10 @@
 <template>
   <el-row :gutter="10">
     <el-col :span="col.span" v-for="(col, i) in data.cols" :key="i" class="col">
-      <draggable class="dragArea" :class="{ 'empty-drag': !col.list.length }" @change="log" :list="col.list" :group="{ name: 'form-design-inner'}" animation="200">
+      <draggable class="dragArea" :disabled="disabled"
+                 :class="{ 'empty-drag': !col.list.length }"
+                 :list="col.list" :group="{ name: 'form-design-inner'}" animation="200"
+                 @change="log">
         <GridCell
             :data="item"
             v-for="(item, j) in col.list"
@@ -9,6 +12,7 @@
             :prop-key="propKey"
             :prop-index="i"
             @syncList="syncList"
+            @changeDisabled="changeDisabled"
             @delete-item="deleteItem(col, j)"
         />
         <div v-if="!col.list.length" class="empty" @click.stop>
@@ -37,30 +41,13 @@ export default {
     },
     propData: {
       type: Object,
-      default: function () {
-        return {
-          title: '栅格布局',
-          type: 'grid',
-          icon: '/static/img/form-design/grid.png',
-          cols: [
-            {
-              span: 12,
-              list: [
-              ]
-            },
-            {
-              span: 12,
-              list: []
-            }
-          ],
-          key: v4()
-        }
-      }
+      default: () => {}
     }
   },
   data () {
     return {
-      data: {}
+      data: {},
+      disabled: false
     }
   },
   methods: {
@@ -88,6 +75,18 @@ export default {
     },
     update (val) {
       this.data = val
+    },
+    changeDisabled (boo) {
+      this.disabled = boo
+    }
+  },
+  watch: {
+    propData: {
+      handler: function (value) {
+        this.data = value
+      },
+      deep: true,
+      immediate: true
     }
   },
   mounted () {
@@ -122,6 +121,7 @@ export default {
   padding: 10px 10px 10px 10px;
   margin-bottom: 10px;
   .empty {
+    text-align: center;
     width: 100%;
     height: 200px;
     display: flex;

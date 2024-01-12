@@ -1,16 +1,19 @@
 <template>
   <div class="cell" @click.stop="chooseElement"
-       :style="{'margin-bottom': elementMargin + 'px'}">
+       :style="{'margin-bottom': elementMargin + 'px',
+       'border': !data.options.border ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'}">
     <div>
-      <div v-if="data.options.showTitle" class="grey"
-           :style="{backgroundColor: data.options.backgroundColor, color: data.options.color}">
+      <div v-if="!data.options.hiddenTitle" class="grey"
+           :style="{backgroundColor: data.options.backgroundColor, color: data.options.color}" @mouseenter="canMove">
         <span>{{ data.options.title }}</span>
+      </div>
+      <div class="always-close" :class="{ 'back-trans': data.key === chooseElementKey, 'more-left': data.options.hiddenTitle && data.type === 'richText'}" :style="{color: data.options.color}">
         <i @click.stop="dialogVisible = true" class="el-icon-close"></i>
       </div>
       <div class="content"
            :style="{'height': data.options.isAutoHeight ? 'fit-content' : data.options.height + 'px',
-            'overflow': data.options.overflowShow ? 'auto' : 'hidden'}">
-        <rich-text v-if="data.type === 'richText'" :options="data.options"></rich-text>
+            'overflow': data.options.overflowShow ? 'auto' : 'hidden'}" @mouseenter="canMove">
+        <rich-text v-if="data.type === 'richText'" :options="data.options" @input="input"></rich-text>
         <echarts-vue v-if="data.type === 'echarts'" :options="data.options"></echarts-vue>
         <imageVue v-if="data.type === 'image'" :options="data.options"></imageVue>
         <card v-if="data.type === 'card'"></card>
@@ -89,6 +92,12 @@ export default {
     chooseElement () {
       this.$store.commit('formDesign/updateElementKey', this.data.key);
       this.$EventBus.$emit("chooseElement", this.data);
+    },
+    canMove () {
+      this.$emit('changeDisabled', false)
+    },
+    input (boo) {
+      this.$emit('changeDisabled', boo)
     }
   },
   data () {
@@ -104,6 +113,26 @@ export default {
   background-color: #E9EDF6;
   position: relative;
   cursor: pointer;
+  .always-close {
+    position: absolute;
+    right: 11px;
+    top: 7px;
+    font-size: 20px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    //background: #fff;
+    z-index: 1;
+    border-radius: 6px;
+    align-items: center;
+    justify-content: center;
+  }
+  .back-trans {
+    background: rgba(255, 255, 255, 0.6);
+  }
+  .more-left {
+    right: 38px;
+  }
   .grey {
     display: flex;
     font-size: 14px;
@@ -132,6 +161,11 @@ export default {
     box-sizing: border-box;
     pointer-events: none;
     background: rgba(0,0,0,.1);
+  }
+  /deep/ .toolbar-wrapper {
+    .popover {
+      background-color: transparent;
+    }
   }
 }
 .el-form-item {

@@ -50,8 +50,7 @@ import mainContent from './main-content.vue'
 export default {
   components: {
     mainSidebar,
-    mainContent,
-    // FDGrid
+    mainContent
   },
   data () {
     return {
@@ -82,15 +81,10 @@ export default {
       },
       defaultValueList: [],
       id: '',
-      elementMargin: 0
+      elementMargin: 0,
     }
   },
   methods: {
-    toPreview () {
-      this.$router.push({
-        path: '/preview'
-      })
-    },
     setColorToAll ({backgroundColor, color}) {
       this.$refs.panel.setColorToAll({backgroundColor, color})
     },
@@ -118,6 +112,9 @@ export default {
     changeMargin () {
       this.$store.commit('formDesign/updateElementMargin', this.elementMargin)
       this.dialogVisible = false
+    },
+    toPreview () {
+      this.$refs.panel.viewPreview()
     }
   },
   mounted () {
@@ -155,6 +152,7 @@ export default {
 }
 .demo-drag {
   height: 100%;
+  border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
   &>.el-row {

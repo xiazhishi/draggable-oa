@@ -95,6 +95,7 @@ export default {
     justify-content: space-between;
     margin-bottom: 10px;
     padding-right: 15px;
+    padding-left: 10px;
     .title {
       width: 50px;
       flex-shrink: 0;
