@@ -74,7 +74,7 @@
               <el-color-picker v-model="element.options.color" :predefine="predefineColors" size="mini"></el-color-picker>
             </el-form-item>
             <el-form-item label="统一主题颜色">
-              <el-checkbox v-model="changeColor" @change="isNeedChange"></el-checkbox>
+              <el-checkbox v-model="changeColor" @change="isNeedChange">统一</el-checkbox>
             </el-form-item>
             <el-form-item v-if="element.type === 'image'" label="所属目录">
               <el-button @click="sourceVisible = true" size="mini">选择来源</el-button>
@@ -99,9 +99,11 @@
                 <el-radio :label="true">自动高度</el-radio>
                 <el-radio :label="false">自定义</el-radio>
               </el-radio-group>
-               <el-input v-if="!element.options.isAutoHeight" v-model="element.options.height" size="mini">
-                  <template slot="append">px</template>
-               </el-input>
+            </el-form-item>
+            <el-form-item label="">
+              <el-input v-if="!element.options.isAutoHeight" v-model="element.options.height" size="mini">
+                <template slot="append">px</template>
+              </el-input>
             </el-form-item>
             <el-form-item label="纵向滚动">
               <el-checkbox v-model="element.options.overflowShow">允许</el-checkbox>
@@ -146,14 +148,14 @@ export default {
             code: 'element',
             options: {
               title: '富文本',
-              hiddenTitle: false,
+              hiddenTitle: true,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false,
+              overflowShow: true,
               richTextValue: '',
-              border: false
+              border: true
             },
             isChoose: false,
             key: v4()
@@ -166,14 +168,14 @@ export default {
             code: 'element',
             options: {
               title: '指标',
-              hiddenTitle: false,
+              hiddenTitle: true,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false,
+              overflowShow: true,
               source: {},
-              border: false
+              border: true
             },
             key: v4()
           },
@@ -185,35 +187,17 @@ export default {
             code: 'element',
             options: {
               title: '图片',
-              hiddenTitle: false,
+              hiddenTitle: true,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false,
+              overflowShow: true,
               sourceList: [],
-              border: false
+              border: true
             },
             key: v4()
           },
-          {
-            title: '卡片',
-            type: 'card',
-            icon: 'el-icon-bank-card',
-            value: '',
-            code: 'element',
-            options: {
-              title: '卡片',
-              hiddenTitle: false,
-              backgroundColor: '#fff',
-              color: '#333',
-              height: 260,
-              isAutoHeight: false,
-              overflowShow: false,
-              border: false
-            },
-            key: v4()
-          }
         ]
       },
       layout: {
@@ -418,14 +402,14 @@ export default {
             code: 'element',
             options: {
               title: '富文本',
-              hiddenTitle: false,
+              hiddenTitle: true,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false,
+              overflowShow: true,
               richTextValue: '',
-              border: false
+              border: true
             },
             isChoose: false,
             key: v4()
@@ -438,14 +422,14 @@ export default {
             code: 'element',
             options: {
               title: '指标',
-              hiddenTitle: false,
+              hiddenTitle: true,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false,
+              overflowShow: true,
               source: {},
-              border: false
+              border: true
             },
             key: v4()
           },
@@ -457,32 +441,14 @@ export default {
             code: 'element',
             options: {
               title: '图片',
-              hiddenTitle: false,
+              hiddenTitle: true,
               backgroundColor: '#fff',
               color: '#333',
               height: 260,
               isAutoHeight: false,
-              overflowShow: false,
+              overflowShow: true,
               sourceList: [],
-              border: false
-            },
-            key: v4()
-          },
-          {
-            title: '卡片',
-            type: 'card',
-            icon: 'el-icon-bank-card',
-            value: '',
-            code: 'element',
-            options: {
-              title: '卡片',
-              hiddenTitle: false,
-              backgroundColor: '#fff',
-              color: '#333',
-              height: 260,
-              isAutoHeight: false,
-              overflowShow: false,
-              border: false
+              border: true
             },
             key: v4()
           }
@@ -540,9 +506,6 @@ export default {
       if (e) {
         this.setColorToAll()
       }
-    },
-    UploadSuccess (response, file, fileList) {
-      console.log(response)
     }
   },
   mounted () {
@@ -581,18 +544,21 @@ export default {
   display: flex;
   flex-wrap: wrap;
   padding-top: 8px;
-  justify-content: space-around;
+  justify-content: left;
 }
 .left-cell {
   cursor: pointer;
   height: 30px;
   width: 115px;
   background-color: #E9EDF6;
-  margin: 0 10px 10px 0;
+  margin: 0 58px 10px 0;
   padding-left: 10px;
   display: flex;
   align-items: center;
   justify-content: left;
+  &:nth-of-type(2n) {
+    margin-right: 0;
+  }
   &:hover {
     background-color: #DCE7FE;
     outline: 1px dashed #4E89F8;
@@ -623,8 +589,8 @@ export default {
     padding-bottom: 0;
   }
   .el-collapse-item__header {
-    height: 32px !important;
-    line-height: 32px !important;
+    height: 40px !important;
+    line-height: 40px !important;
   }
 }
 .setting-content,
@@ -680,10 +646,20 @@ export default {
     margin-bottom: 2px;
     .el-form-item__content {
       text-align: left;
+      line-height: 34px;
+      //display: flex;
+      //height: 40px;
+      //align-items: center;
+      //flex-wrap: wrap;
+    }
+    .el-checkbox {
+      margin-top: 3px;
     }
     .el-radio-group {
       display: flex;
       justify-content: space-between;
+      width: 100%;
+      margin-top: 13px;
       .el-radio {
         margin-right: 0px;
       }
@@ -692,6 +668,13 @@ export default {
   /deep/ .el-color-picker {
     position: relative;
     top: 6px;
+  }
+}
+/deep/ .el-tabs__nav-scroll {
+  height: 50px;
+  line-height: 50px;
+  &:after {
+    height: 1px;
   }
 }
 </style>

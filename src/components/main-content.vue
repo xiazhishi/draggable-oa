@@ -203,7 +203,8 @@ export default {
   justify-content: center;
 }
 /deep/ .preview-dialog {
-  height: 80%;
+  max-height: 80%;
+  margin-top: 10vh;
   overflow: auto;
 }
 </style>

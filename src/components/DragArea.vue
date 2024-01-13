@@ -1,11 +1,11 @@
 <template>
-  <div class="demo-drag">
+  <div class="drag-area">
     <el-row>
-      <el-col style="width: 319px;border-right: 1px solid #ccc;">
+      <el-col style="width: 319px;flex-shrink: 0;">
         <main-sidebar @set-color-to-all="setColorToAll" @clear="clear" />
       </el-col>
       <el-col
-          style="height:100vh; width: calc(100% - 232px);"
+          style="flex: 1;border-left: 1px solid #ccc"
           id="form-center"
       >
         <div class="header">
@@ -13,8 +13,7 @@
           <div class="groups">
             <el-button size="mini" @click="toPreview">预览</el-button>
             <el-button size="mini" @click="showDialog">元素边距</el-button>
-            <el-button size="mini" @click="clear">清空布局</el-button>
-            <el-button size="mini" type="primary" @click="save">保存</el-button>
+            <el-button size="mini" @click="clearShow = true">清空布局</el-button>
           </div>
         </div>
         <main-content ref="panel" :formAttr="formAttr" :local-list="localList"/>
@@ -40,6 +39,18 @@
           <el-button type="primary" @click.stop="changeMargin">确 定</el-button>
         </span>
     </el-dialog>
+    <el-dialog
+        title="确认信息"
+        :visible.sync="clearShow"
+        :append-to-body="true"
+        :close-on-click-modal="false"
+        width="30%">
+      <span>确认清空布局吗？</span>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click.stop="clearShow = false">取 消</el-button>
+          <el-button type="primary" @click.stop="clear">确 定</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -54,6 +65,7 @@ export default {
   },
   data () {
     return {
+      clearShow: false,
       localList: [],
       visible: true,
       activeName: '2',
@@ -104,6 +116,7 @@ export default {
         message: '清除成功',
         type: 'success'
       });
+      this.clearShow = false
     },
     showDialog () {
       this.elementMargin = this.$store.state.formDesign.elementMargin
@@ -139,7 +152,8 @@ export default {
   align-items: center;
   padding: 8px 16px;
   font-size: 14px;
-  border-bottom: 1px solid #efefef;
+  border-bottom: 1px solid #E4E7ED;
+  border-right: 1px solid #efefef;
   height: 50px;
   &>.name {
     display: flex;
@@ -150,7 +164,7 @@ export default {
     }
   }
 }
-.demo-drag {
+.drag-area {
   height: 100%;
   border: 1px solid #ccc;
   display: flex;
@@ -158,6 +172,7 @@ export default {
   &>.el-row {
     flex: 1;
     display: flex;
+    height: 100%;
   }
 }
 /deep/ .el-dialog {

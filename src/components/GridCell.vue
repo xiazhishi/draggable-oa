@@ -1,13 +1,14 @@
 <template>
   <div class="cell" @click.stop="chooseElement"
        :style="{'margin-bottom': elementMargin + 'px',
-       'border': !data.options.border ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'}">
+       'border': !data.options.border ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'}"
+        :class="{'more-left': data.options.hiddenTitle && data.type === 'richText'}">
     <div>
       <div v-if="!data.options.hiddenTitle" class="grey"
            :style="{backgroundColor: data.options.backgroundColor, color: data.options.color}" @mouseenter="canMove">
         <span>{{ data.options.title }}</span>
       </div>
-      <div class="always-close" :class="{ 'back-trans': data.key === chooseElementKey, 'more-left': data.options.hiddenTitle && data.type === 'richText'}" :style="{color: data.options.color}">
+      <div class="always-close" :class="{ 'back-trans': data.key === chooseElementKey}" :style="{color: data.options.color}">
         <i @click.stop="dialogVisible = true" class="el-icon-close"></i>
       </div>
       <div class="content"
@@ -130,9 +131,6 @@ export default {
   .back-trans {
     background: rgba(255, 255, 255, 0.6);
   }
-  .more-left {
-    right: 38px;
-  }
   .grey {
     display: flex;
     font-size: 14px;
@@ -166,6 +164,11 @@ export default {
     .popover {
       background-color: transparent;
     }
+  }
+}
+.more-left {
+  /deep/ .toolbar-wrapper {
+    padding-right: 35px;
   }
 }
 .el-form-item {

@@ -1,20 +1,21 @@
 <template>
   <div class="edit">
-    <div class="title">
-      <div class="new-paper">新建周报</div>
-      <div class="description">研究员进行周报的填写</div>
+    <div class="group">
+      <el-button type="primary" @click="submit" size="medium">提交周报</el-button>
     </div>
     <div class="form">
       <div class="form-title">新建周报</div>
-      <el-form :model="form" label-width="150px" label-position="left">
+      <el-form :model="form" label-width="100px" label-position="left">
         <el-form-item label="周报标题：">
           <div style="width: 600px">
             <el-input v-model="form.title" placeholder="请输入标题"></el-input>
           </div>
         </el-form-item>
-        <el-form-item label="周报内容：">
-          <demoDrag ref="drag"></demoDrag>
-        </el-form-item>
+        <div class="drag-content">
+          <el-form-item label="周报内容：">
+            <drag-area ref="drag"></drag-area>
+          </el-form-item>
+        </div>
         <el-form-item label="其他附件：">
           <el-upload
               class="upload-demo"
@@ -27,10 +28,6 @@
           </el-upload>
         </el-form-item>
       </el-form>
-      <div class="group">
-        <el-button type="primary" @click="submit">提交周报</el-button>
-        <el-button>取消</el-button>
-      </div>
       <el-drawer
           :title="form.title"
           :visible.sync="drawer"
@@ -102,11 +99,11 @@
 import amEditor from "@/components/element/editor/AmEditor.vue";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import demoDrag from '../components/demoDrag.vue'
+import DragArea from '../components/DragArea.vue'
 import preview from '../pages/preview.vue'
 export default {
   components: {
-    demoDrag,
+    DragArea,
     preview,
     amEditor
   },
@@ -187,8 +184,16 @@ export default {
 
 <style scoped lang="scss">
 .edit {
+  height: 100%;
   text-align: left;
   padding: 20px;
+  position: relative;
+  &>.group {
+    position: absolute;
+    z-index: 1;
+    top: 54px;
+    right: 20px;
+  }
   &>.title {
     text-align: left;
     margin-bottom: 20px;
@@ -203,6 +208,7 @@ export default {
     }
   }
   &>.form {
+    height: 100%;
     &>.form-title {
       text-align: left;
       font-size: 14px;
@@ -332,6 +338,19 @@ export default {
     justify-content: center;
     .el-button {
       margin-right: 5px;
+    }
+  }
+}
+/deep/ .el-form {
+  height: calc(100% - 50px);
+  .drag-content {
+    height: calc(100% - 149px);
+    margin-bottom: 22px;
+    .el-form-item {
+      height: 100%;
+      .el-form-item__content {
+        height: 100%;
+      }
     }
   }
 }

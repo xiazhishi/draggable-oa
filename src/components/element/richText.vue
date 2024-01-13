@@ -1,11 +1,9 @@
 <script>
 import amEditor from './editor/AmEditor.vue'
-import AmView from "./editor/AmView.vue";
 export default {
   name: "richText",
   components: {
-    amEditor,
-    AmView
+    amEditor
   },
   props: {
     options: {
@@ -23,30 +21,42 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      editorHeight: 212,
+      isChange: true
+    }
+  },
+  watch: {
+  },
+  mounted() {
   }
 }
 </script>
 
 <template>
-  <div class="rich-text" :class="[options.isAutoHeight ? 'default' : 'set']" @mouseenter.stop="input(true)" @mouseleave.stop="input(false)">
-    <am-editor v-if="!isView" v-model="options.richTextValue" :editorHeight="219" :border="false"></am-editor>
-    <div v-else v-html="options.richTextValue" class="view"></div>
+  <div class="rich-text" ref="richText" :class="[options.isAutoHeight ? 'default' : 'set']" @mouseenter.stop="input(true)" @mouseleave.stop="input(false)">
+    <am-editor v-if="!isView && isChange" v-model="options.richTextValue" ref="am" :border="false" :editor-height="editorHeight"></am-editor>
+    <div v-else v-html="options.richTextValue" class="view" :style="{'overflow': options.overflowShow ? 'auto' : 'hidden'}"></div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .default {
-  height: 260px;
+  overflow: visible;
+  /deep/ .editor-content {
+    overflow: visible !important;
+    height: fit-content !important;
+  }
 }
 .set {
   height: 100%;
+  overflow: auto;
 }
 .rich-text {
   background-color: #fff;
   text-align: left;
-  overflow: auto;
   &>.view {
+    height: 100%;
     padding: 15px;
   }
 }
