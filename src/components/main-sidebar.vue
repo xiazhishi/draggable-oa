@@ -670,11 +670,13 @@ export default {
     top: 6px;
   }
 }
+/deep/ .el-tabs__nav-wrap {
+  &::after {
+    height: 1px;
+  }
+}
 /deep/ .el-tabs__nav-scroll {
   height: 50px;
   line-height: 50px;
-  &:after {
-    height: 1px;
-  }
 }
 </style>

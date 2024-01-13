@@ -8,12 +8,15 @@
            :style="{backgroundColor: data.options.backgroundColor, color: data.options.color}" @mouseenter="canMove">
         <span>{{ data.options.title }}</span>
       </div>
-      <div class="always-close" :class="{ 'back-trans': data.key === chooseElementKey}" :style="{color: data.options.color}">
+      <div class="always-close" :class="{ 'back-trans': data.key === chooseElementKey, 'to-right': data.options.hiddenTitle && data.type === 'richText'}" :style="{color: data.options.color}">
         <i @click.stop="dialogVisible = true" class="el-icon-close"></i>
+      </div>
+      <div v-if="data.options.hiddenTitle && data.type === 'richText'" class="drag-hand" :style="{color: data.options.color}" @mouseenter="input(false)" @mouseleave="input(true)">
+        <i class="el-icon-rank"></i>
       </div>
       <div class="content"
            :style="{'height': data.options.isAutoHeight ? 'fit-content' : data.options.height + 'px',
-            'overflow': data.options.overflowShow ? 'auto' : 'hidden'}" @mouseenter="canMove">
+            'overflow': data.options.overflowShow ? 'auto' : 'hidden'}">
         <rich-text v-if="data.type === 'richText'" :options="data.options" @input="input"></rich-text>
         <echarts-vue v-if="data.type === 'echarts'" :options="data.options"></echarts-vue>
         <imageVue v-if="data.type === 'image'" :options="data.options"></imageVue>
@@ -114,6 +117,18 @@ export default {
   background-color: #E9EDF6;
   position: relative;
   cursor: pointer;
+  .drag-hand {
+    position: absolute;
+    right: 40px;
+    font-size: 20px;
+    top: 0px;
+    cursor: move;
+    &>img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+  }
   .always-close {
     position: absolute;
     right: 11px;
@@ -127,6 +142,9 @@ export default {
     border-radius: 6px;
     align-items: center;
     justify-content: center;
+  }
+  .to-right {
+    right: 5px;
   }
   .back-trans {
     background: rgba(255, 255, 255, 0.6);
@@ -168,7 +186,7 @@ export default {
 }
 .more-left {
   /deep/ .toolbar-wrapper {
-    padding-right: 35px;
+    padding-right: 65px;
   }
 }
 .el-form-item {

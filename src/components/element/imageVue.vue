@@ -30,8 +30,8 @@ export default {
   flex-wrap: wrap;
   justify-content: left;
   img {
-    width: 150px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
     margin-right: 10px;
   }
