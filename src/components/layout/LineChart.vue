@@ -158,7 +158,7 @@ export default {
       width: 0,
       height: 0,
       beforeList: [],
-      max: 6
+      max: 12
     }
   },
   methods: {
@@ -201,6 +201,7 @@ export default {
   watch: {
     item: {
       handler: function () {
+        this.max = 12
         let beforeList = []
         this.layout.forEach(item => {
           if (item.y === this.item.y && item.x < this.item.x) {

@@ -34,7 +34,8 @@ export default {
 </script>
 
 <template>
-  <div class="rich-text" ref="richText" :class="[options.isAutoHeight ? 'default' : 'set']" @mouseenter.stop="input(true)" @mouseleave.stop="input(false)">
+  <div class="rich-text" ref="richText" :class="[options.isAutoHeight ? 'default' : 'set']"
+       @mouseenter="input(true)" @mouseleave="input(false)">
     <am-editor v-if="!isView && isChange" v-model="options.richTextValue" ref="am" :border="false" :editor-height="editorHeight"></am-editor>
     <div v-else v-html="options.richTextValue" class="view" :style="{'overflow': options.overflowShow ? 'auto' : 'hidden'}"></div>
   </div>

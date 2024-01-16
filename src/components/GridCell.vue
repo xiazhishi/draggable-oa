@@ -11,7 +11,8 @@
       <div class="always-close" :class="{ 'back-trans': data.key === chooseElementKey, 'to-right': data.options.hiddenTitle && data.type === 'richText'}" :style="{color: data.options.color}">
         <i @click.stop="dialogVisible = true" class="el-icon-close"></i>
       </div>
-      <div v-if="data.options.hiddenTitle && data.type === 'richText'" class="drag-hand" :style="{color: data.options.color}" @mouseenter="input(false)" @mouseleave="input(true)">
+      <div v-if="data.options.hiddenTitle && data.type === 'richText'" class="drag-hand" :style="{color: data.options.color}"
+           @mouseenter="input(false)">
         <i class="el-icon-rank"></i>
       </div>
       <div class="content"

@@ -549,9 +549,9 @@ export default {
 .left-cell {
   cursor: pointer;
   height: 30px;
-  width: 115px;
+  width: 129px;
   background-color: #E9EDF6;
-  margin: 0 58px 10px 0;
+  margin: 0 24px 10px 0;
   padding-left: 10px;
   display: flex;
   align-items: center;

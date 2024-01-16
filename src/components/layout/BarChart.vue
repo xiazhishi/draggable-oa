@@ -2,8 +2,10 @@
   <div class="bar-chart">
     <div class="title">
       <div class="text">房地产竣工面积</div>
-      <i class="el-icon-setting" @click="dialogVisible = true"></i>
-      <i class="el-icon-delete" @click="deleteEcharts"></i>
+      <div class="icon">
+        <i class="el-icon-setting" @click="dialogVisible = true"></i>
+        <i class="el-icon-delete" @click="deleteEcharts"></i>
+      </div>
     </div>
     <e-chart-container ref="chart"></e-chart-container>
     <el-dialog
@@ -49,7 +51,7 @@ export default {
       dialogVisible: false,
       width: 0,
       height: 0,
-      max: 6
+      max: 12
     }
   },
   methods: {
@@ -101,6 +103,7 @@ export default {
   watch: {
     item: {
       handler: function () {
+        this.max = 12
         let beforeList = []
         this.layout.forEach(item => {
           if (item.y === this.item.y && item.x < this.item.x) {
@@ -132,6 +135,12 @@ export default {
       cursor: pointer;
       &:hover{
         color: #409EFF;
+      }
+    }
+    &>.icon {
+      font-size: 16px;
+      .el-icon-setting {
+        margin-right: 8px;
       }
     }
     &>.text{

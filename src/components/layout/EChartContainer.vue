@@ -5,7 +5,7 @@
 <script>
 import {debounce} from 'throttle-debounce'
 import * as echarts from 'echarts'
-import * as ecStat from 'echarts-stat'
+// import * as ecStat from 'echarts-stat'
 import { addResizeListener, removeResizeListener } from 'element-ui/lib/utils/resize-event'
 
 export default {
@@ -50,7 +50,7 @@ export default {
     },
     /** 注册回归分析 */
     registerTransform () {
-      echarts.registerTransform(ecStat.transform.regression)
+      // echarts.registerTransform(ecStat.transform.regression)
     }
   },
   mounted () {

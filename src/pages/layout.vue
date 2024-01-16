@@ -1,15 +1,24 @@
 <template>
   <div class="page-home-dashboard">
-    <el-button >添加消息说明</el-button>
-    <el-button >添加观点说明</el-button>
-    <seasonButton @add-season="addSeason"></seasonButton>
-    <el-button >添加仪表板</el-button>
-    <el-button @click="dialogVisible = true">添加图表</el-button>
+    <div class="page-home-dashboard-head">
+      <message-button @add-message="addMessage"></message-button>
+      <point-button @add-point="addPoint"></point-button>
+      <seasonButton @add-season="addSeason"></seasonButton>
+      <el-button >添加仪表板</el-button>
+      <el-button @click="dialogVisible = true">添加图表</el-button>
+    </div>
+    <div v-if="messageObj && messageObj.code" class="message-obj">
+      <div class="left" v-text="messageObj.text"></div>
+      <div class="right">查看全部</div>
+    </div>
+    <div v-if="pointObj && pointObj.code" class="point-list">
+      <div v-html="pointObj.text"></div>
+    </div>
     <season-bar v-if="seasonList.length" :list="seasonList"></season-bar>
     <grid-layout :layout="layout"
                  ref="gridlayout"
                  :auto-position="true"
-                 :isResizable="false"
+                 :isResizable="true"
                  :colNum="colNum">
       <grid-item v-for="item in layout"
                  drag-ignore-from=".no-drag"
@@ -69,17 +78,19 @@ import BarChart from '../components/layout/BarChart'
 import LineChart from '../components/layout/LineChart'
 import seasonBar from "../components/layout/seasonBar.vue";
 import seasonButton from "../components/layout/seasonButton.vue";
+import pointButton from "../components/layout/pointButton.vue";
+import messageButton from "../components/layout/messageButton.vue";
 import {cloneDeep} from "lodash-es";
 
 export default {
   name: 'PageHomeDashboard',
-  components: {GridLayout, GridItem, seasonBar, seasonButton},
+  components: {GridLayout, GridItem, seasonBar, seasonButton, pointButton, messageButton},
   data () {
     return {
-      colNum: 6,
+      colNum: 12,
       layout: [
-        {x: 0, y: 0, w: 2, h: 2, i: 1, type: 'bar'},
-        {x: 2, y: 0, w: 2, h: 2, i: 2, type: 'line'}
+        {x: 0, y: 0, w: 4, h: 4, i: 1, type: 'bar'},
+        {x: 4, y: 0, w: 4, h: 4, i: 2, type: 'line'}
       ],
       dialogVisible: false,
       addList: [{
@@ -199,11 +210,9 @@ export default {
       filterText: '',
       select: [],
       addI: 4,
-      messageObj: {
-        title: '添加消息说明',
-        list: []
-      },
-      seasonList: []
+      seasonList: [],
+      pointObj: null,
+      messageObj: null
     }
   },
   computed: {
@@ -223,13 +232,13 @@ export default {
   methods: {
     handleAddItem () {
       this.select.forEach(item => {
-        const {x, y} = this.getPositionForNewItem(this.layout, 6, 2, 2)
+        const {x, y} = this.getPositionForNewItem(this.layout, 12, 4, 4)
         console.log(x, y, '找到的')
         const obj = {
           x,
           y, // puts it at the bottom
-          w: 2,
-          h: 2,
+          w: 4,
+          h: 4,
           i: this.addI,
           type: item.type
         }
@@ -309,6 +318,12 @@ export default {
     },
     addSeason (e) {
       this.seasonList = e
+    },
+    addPoint (e) {
+      this.pointObj = e
+    },
+    addMessage (e) {
+      this.messageObj = e
     }
   },
   mounted () {
@@ -318,6 +333,53 @@ export default {
 
 <style lang="scss">
 .page-home-dashboard {
+  //padding-top: 20px;
+  padding: 20px 10px 0;
+  &>.page-home-dashboard-head {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    .el-button {
+      margin-right: 10px;
+      margin-left: 0;
+    }
+  }
+  &>.point-list {
+    background-color: #F0F2F5;
+    padding: 20px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    &>div {
+      width: 100%;
+      height: 260px;
+      overflow: auto;
+    }
+  }
+  &>.message-obj {
+    background-color: #F0F2F5;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    height: 50px;
+    text-align: left;
+    justify-content: space-between;
+    &>.left {
+      max-width: 80%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    &>.right {
+      color: #4E89F8;
+      cursor: pointer;
+    }
+  }
   & > .vue-grid-layout {
     flex: 1;
 
