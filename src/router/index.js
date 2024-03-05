@@ -1,9 +1,7 @@
 import edit from '../pages/edit.vue'
-import layout from '../pages/layout.vue'
 
 const routes = [
-    { path: '/', component: edit },
-    { path: '/layout', component: layout },
+    { path: '/', component: edit }
 ]
 
 export default routes

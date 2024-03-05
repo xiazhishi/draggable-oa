@@ -21,7 +21,6 @@
       <div>
         <grid-panel
             :prop-data="data"
-            :form-attr="formAttr"
             :prop-key="data.key"
             @syncList="syncList"
             @update="update"
@@ -48,33 +47,9 @@ export default {
     GridPanel
   },
   props: {
-    formAttr: {
-      type: Object,
-      default: function () {
-        return {
-          align: 'top',
-          size: 'medium',
-          labelWidth: 80
-        }
-      }
-    },
     data: {
       type: Object,
-      default: function () {
-        return {
-          type: '',
-          name: '',
-          code: '',
-          options: {
-            width: '100%',
-            defaultValue: '',
-            required: false,
-            dataType: 'string',
-            placeholder: ''
-          },
-          key: '1556775967000_4898'
-        }
-      }
+      default: () => {}
     },
     index: {
       type: Number

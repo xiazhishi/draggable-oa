@@ -20,7 +20,7 @@
             'overflow': data.options.overflowShow ? 'auto' : 'hidden'}">
         <rich-text v-if="data.type === 'richText'" :options="data.options" @input="input"></rich-text>
         <echarts-vue v-if="data.type === 'echarts'" :options="data.options"></echarts-vue>
-        <imageVue v-if="data.type === 'image'" :options="data.options"></imageVue>
+        <image-vue v-if="data.type === 'image'" :options="data.options"></image-vue>
         <card v-if="data.type === 'card'"></card>
       </div>
     </div>
@@ -54,20 +54,7 @@ export default {
   props: {
     data: {
       type: Object,
-      default: function () {
-        return {
-          type: '',
-          name: '',
-          options: {
-            width: '100%',
-            defaultValue: '',
-            required: false,
-            dataType: 'string',
-            placeholder: ''
-          },
-          key: '1556775967000_4898'
-        }
-      }
+      default: () => {}
     },
     propKey: {
       type: String,

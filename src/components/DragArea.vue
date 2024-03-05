@@ -16,7 +16,7 @@
             <el-button size="mini" @click="clearShow = true">清空布局</el-button>
           </div>
         </div>
-        <main-content ref="panel" :formAttr="formAttr" :local-list="localList"/>
+        <main-content ref="panel" :local-list="localList"/>
       </el-col>
     </el-row>
     <el-dialog
@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import mainSidebar from './main-sidebar.vue'
-import mainContent from './main-content.vue'
+import mainSidebar from './mainSidebar.vue'
+import mainContent from './mainContent.vue'
 
 export default {
   components: {
@@ -67,22 +67,6 @@ export default {
     return {
       clearShow: false,
       localList: [],
-      visible: true,
-      activeName: '2',
-      formAttr: {
-        align: 'left',
-        size: 'medium',
-        labelWidth: '80px',
-        isTabs: false,
-        tabType: 'card',
-        tabs: [
-          {
-            name: 'tab1',
-            formList: []
-          }
-        ]
-      },
-      dialogFormVisible: false,
       dialogVisible: false,
       tabIndex: '0',
       saveData: {
@@ -91,7 +75,6 @@ export default {
         name: '',
         remarks: ''
       },
-      defaultValueList: [],
       id: '',
       elementMargin: 0,
     }

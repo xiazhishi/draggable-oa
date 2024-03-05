@@ -15,7 +15,6 @@
             :data="item"
             :index="i"
             :list="list"
-            :formAttr="formAttr"
             @choose-grid="chooseGrid"
             @delete-panel="deletePanel(i)"
             @syncList="syncList"
@@ -131,7 +130,6 @@ export default {
       this.$EventBus.$emit('chooseGrid', data)
     },
     setColorToAll ({backgroundColor, color}) {
-      console.log(this.list)
       this.list.forEach(item => {
         item.cols.forEach(ele => {
           ele.list.forEach(el => {

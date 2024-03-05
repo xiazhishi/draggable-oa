@@ -40,7 +40,6 @@ export default {
     }
   },
   created () {
-    console.log(this.options, 'options')
     if (this.options.source.code) {
       setTimeout(() => {
         this.initChart()

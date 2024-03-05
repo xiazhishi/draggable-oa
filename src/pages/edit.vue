@@ -4,108 +4,25 @@
       <el-button type="primary" @click="submit" size="medium">提交周报</el-button>
     </div>
     <div class="form">
-      <div class="form-title">新建周报</div>
       <el-form :model="form" label-width="100px" label-position="left">
-        <el-form-item label="周报标题：">
-          <div style="width: 600px">
-            <el-input v-model="form.title" placeholder="请输入标题"></el-input>
-          </div>
-        </el-form-item>
         <div class="drag-content">
-          <el-form-item label="周报内容：">
+          <el-form-item label="内容：">
             <drag-area ref="drag"></drag-area>
           </el-form-item>
         </div>
-        <el-form-item label="其他附件：">
-          <el-upload
-              class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              multiple
-              :limit="3"
-              :file-list="form.fileList">
-            <el-button size="small" type="primary"><i class="el-icon-plus"></i>添加附件</el-button>
-            <div slot="tip" class="el-upload__tip">支持上传.jpg、.png、.doc、.docx、.xls、.xlsx、.pptx、.pdf、.zip、.rar</div>
-          </el-upload>
-        </el-form-item>
       </el-form>
-      <el-drawer
-          :title="form.title"
-          :visible.sync="drawer"
-          :show-close="true"
-          direction="rtl">
-        <div class="drawer-content">
-          <div class="detail">
-            <div class="detail-header">
-              <div class="title">周报详情</div>
-              <el-button type="danger" size="mini" @click="exportDataToPDF">导出PDF</el-button>
-            </div>
-            <div class="main" id="pdfDom" ref="orderForm">
-              <div class="title">{{ form.title }}</div>
-              <div class="line">
-                <div class="right">提交时间：{{ nowDate }}</div>
-              </div>
-              <preview v-if="drawer"></preview>
-            </div>
-          </div>
-<!--          <div class="interview">-->
-<!--            <div class="detail-header">评论详情</div>-->
-<!--            <div class="main">-->
-<!--              <div v-for="(item, index) in interviewList" :key="index" class="message-bubble">-->
-<!--                <div v-if="item.flow === 'in'" class="bubble in">-->
-<!--                  <div class="head">-->
-<!--                    <img :src="item.headPath" alt="">-->
-<!--                  </div>-->
-<!--                  <div class="message">-->
-<!--                    <div class="time">{{ item.time }}</div>-->
-<!--                    <div class="profile" v-html="item.message"></div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div v-else class="bubble out">-->
-<!--                  <div class="message">-->
-<!--                    <div class="time">{{ item.time }}</div>-->
-<!--                    <div class="profile" v-html="item.message"></div>-->
-<!--                  </div>-->
-<!--                  <div class="head">-->
-<!--                    <img :src="item.headPath" alt="">-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="input" @click="interviewVisible = true">-->
-<!--              <div v-if="interview" v-html="interview"></div>-->
-<!--              <span v-else>点击输入评论...</span>-->
-<!--            </div>-->
-<!--          </div>-->
-          <el-drawer
-              :visible.sync="interviewVisible"
-              direction="btt"
-              title="评论"
-              :append-to-body="true">
-            <div class="interview-input">
-              <amEditor v-model="interview" :editorHeight="180"></amEditor>
-              <div class="btn">
-                <el-button size="mini">取消评论</el-button>
-                <el-button size="mini" type="primary" @click="submitPreview">提交评论</el-button>
-              </div>
-            </div>
-          </el-drawer>
-        </div>
-      </el-drawer>
     </div>
   </div>
 </template>
 
 <script>
-import amEditor from "@/components/element/editor/AmEditor.vue";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import DragArea from '../components/DragArea.vue'
-import preview from '../pages/preview.vue'
+
 export default {
   components: {
-    DragArea,
-    preview,
-    amEditor
+    DragArea
   },
   data () {
     return {
@@ -138,7 +55,6 @@ export default {
   },
   methods: {
     submit () {
-      console.log(this.form.title)
       if (!this.form.title) {
         this.$message.error('请填写周报标题')
         return
