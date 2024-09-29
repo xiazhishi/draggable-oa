@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import VueGridLayout from 'vue-grid-layout'
+// import VueGridLayout from 'vue-grid-layout'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import pathUtils from './util/pathUtils'
@@ -11,7 +11,7 @@ import pdf from './util/pdf'
 import axios from 'axios'
 
 Vue.config.productionTip = false
-Vue.use(VueGridLayout)
+// Vue.use(VueGridLayout)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(pdf)
@@ -23,7 +23,7 @@ Vue.prototype.$extend = function () {
 Vue.prototype.$axios = axios
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   routes: routes
 })
 
